@@ -1,2 +1,2 @@
 # TUNI-Projects
-Tampere University Course projects
+Tampere University course and work projects
