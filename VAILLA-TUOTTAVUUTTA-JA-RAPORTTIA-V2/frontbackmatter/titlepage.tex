@@ -1,0 +1,64 @@
+%*******************************************************
+% Titlepage
+%******************************************************
+\begin{titlepage}
+
+%******************************
+% HEADER FIGURES AND LOGOS ETC.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[height=1.5em]{gfx/seamk.png}
+        \hspace{1em}
+    \includegraphics[height=2em]{gfx/vy2.png}
+        \hspace{1em}
+    \includegraphics[height=2em]{gfx/logo_TAU_2line_eng_purple_CMYK.pdf}
+        \hspace{1em}
+    \includegraphics[height=2em]{gfx/epl_logo.pdf}
+\end{figure}
+%******************************
+
+    \centering
+        \vspace{2em}
+
+        \noindent\Large
+		\begingroup
+			\textbf{\reportTitle}
+		\endgroup
+  
+        \vspace*{0.5em}
+        \noindent\large
+		\begingroup
+			\textbf{\reportSubtitle}
+		\endgroup
+
+\vspace*{0.5em}
+
+%******************************
+% FIGURE - kansiokuvaehdotus
+% t= top of page, b = bottom, h = here, p = special page
+\begin{figure}[h]
+    % Figure 0
+    \centering
+    \includegraphics[width=1\textwidth]{gfx/eulogo.jpg}
+    % \caption{cover illustration.}
+    \label{fig:coverillustration}
+\end{figure}
+%******************************
+
+\vspace{1em}
+\begin{center}
+\small
+Tämä raportti on laadittu osana vAI:lla tuottavuutta? --hanketta. Hanke on\\
+Euroopan unionin osarahoittama.
+\end{center}
+
+\vspace*{0.5em}
+
+\noindent\large
+		\shortAuthors
+
+\end{titlepage}
+
+% keeps behind page clear and empty
+\thispagestyle{empty}
+\cleardoublepage

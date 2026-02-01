@@ -1,0 +1,19 @@
+PS C:\Users\Juha> docker container ls
+CONTAINER ID   IMAGE                                       COMMAND                  CREATED             STATUS          PORTS                  NAMES
+70f9da7c266c   compse140-nginx-exercise-nginx              "/docker-entrypoint.…"   45 seconds ago      Up 43 seconds   0.0.0.0:8198->80/tcp   compse140-nginx-exercise-nginx-1
+e758baacc82e   compse140-nginx-exercise-auth_service       "python app.py"          45 seconds ago      Up 44 seconds   5002/tcp               compse140-nginx-exercise-auth_service-1
+0a68472cbee6   compse140-nginx-exercise-shutdown_service   "python app.py"          17 minutes ago      Up 44 seconds   5001/tcp               compse140-nginx-exercise-shutdown_service-1
+74190d5bab49   compse140-nginx-exercise-service1-2         "python app.py"          40 minutes ago      Up 44 seconds   8199/tcp               compse140-nginx-exercise-service1-2-1
+241d3abf2de1   compse140-nginx-exercise-service1-3         "python app.py"          40 minutes ago      Up 44 seconds   8199/tcp               compse140-nginx-exercise-service1-3-1
+a3b28a6d5796   compse140-nginx-exercise-service1-1         "python app.py"          40 minutes ago      Up 44 seconds   8199/tcp               compse140-nginx-exercise-service1-1-1
+e9431427b236   compse140-nginx-exercise-service2           "docker-entrypoint.s…"   About an hour ago   Up 44 seconds   5000/tcp               compse140-nginx-exercise-service2-1
+
+
+
+PS C:\Users\Juha> docker network ls
+NETWORK ID     NAME                               DRIVER    SCOPE
+a49db7811527   bridge                             bridge    local
+e6a69d56b62e   compse140-nginx-exercise_default   bridge    local
+3cb270e8cf41   ex03_default                       bridge    local
+1d9f592fec71   host                               host      local
+8246c921de63   none                               null      local

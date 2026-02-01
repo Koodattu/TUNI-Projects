@@ -1,0 +1,122 @@
+%!TEX root = ../main.tex
+%********************************
+\chapter{Technologies and Tools}
+This section provides an overview of the AI models, libraries, and frameworks used to develop the Voice Guided Imaging application. The focus was on creating a modular pipeline that integrates multiple self-hosted generative AI models for processing speech commands, inferring user intentions, and generating multimedia content.
+
+\section{Artificial Intelligence Models}
+\subsection{OpenAI Whisper (Speech Recognition)}
+
+OpenAI Whisper is a state-of-the-art automatic speech recognition (ASR) model developed to handle multilingual and multitask transcription. It is capable of recognizing and transcribing speech in multiple languages, including Finnish and English, while also supporting translation from non-English speech into English text. Its robustness makes it particularly suitable for diverse environments and accents. ~\cite{radford2022robustspeechrecognitionlargescale}
+
+\subsubsection{Optimization}
+
+\begin{itemize} \item Instead of using the standard Whisper model, Faster-Whisper was used, which is a performance-optimized variant designed to reduce latency and memory usage during inference. Faster-Whisper utilizes CTranslate2 for model execution, significantly improving runtime efficiency~\cite{fasterwhisper}.
+\begin{itemize} \item This optimization enabled real-time transcription even when processing larger datasets or longer audio recordings, maintaining the accuracy of the original Whisper model. \end{itemize} \end{itemize}
+
+\subsubsection{Role in Pipeline}
+
+\begin{itemize} \item Captures and transcribes user speech into text format, leveraging Whisper's strong multilingual capabilities. \item Provides translation from non-English speech into English text, enabling seamless multilingual processing. \item Outputs the transcribed text to downstream models for intent recognition and further processing. \end{itemize}
+
+\subsection{Mistral Instruct (Intent Recognition)}
+Mistral Instruct is a language model based on the Mistral 7B architecture, designed for efficient performance and ease of deployment~\cite{jiang2023mistral7b}. It serves as the intent recognition component in this project, enabling the interpretation of natural language commands and converting them into structured outputs for further processing.
+
+We chose the Instruct variant over the base model because it is optimized for following human instructions more reliably. The Instruct model is fine-tuned with reinforcement learning from human feedback (RLHF), ensuring that its responses align closely with user prompts~\cite{ouyang2022traininglanguagemodelsfollow}. This capability was crucial for our application, which required structured outputs, such as JSON-formatted commands, to control downstream AI models effectively.
+
+To optimize performance and reduce hardware requirements, we implemented 4-bit quantization (Q4). Quantization significantly decreases the memory footprint and computational cost without sacrificing much accuracy. According to research, 4-bit precision offers a balance between model size and performance, making it ideal for running large language models on local hardware~\cite{dettmers2023case4bitprecisionkbit}.
+
+\subsubsection{Role in Pipeline}
+\begin{itemize}
+\item Processes transcriptions from the Whisper model.
+\item Infers the intended user action with possible actions being:
+\begin{description}
+\item[Create] Generate a new image with instructions.
+\item[Edit] Modify an existing image with instructions.
+\item[Undo] Revert changes to a previous state.
+\item[Video] Generate a video from an image.
+\end{description}
+\item Produces structured outputs, enabling seamless integration with the image and video generation models.
+\end{itemize}
+
+\subsection{SDXL-Lightning (Image Generation)}
+SDXL-Lightning is a diffusion-based image generation model built on the SDXL framework, designed for fast, high-quality image generation. It uses progressive adversarial diffusion distillation, enabling it to produce images in one-step and few-step processes while maintaining high visual fidelity.~\cite{lin2024sdxllightningprogressiveadversarialdiffusion}
+
+We selected SDXL-Lightning because it offers a balance between speed and quality, making it ideal for interactive AI applications requiring low-latency outputs. It supports high-resolution generation (1024x1024), outperforming earlier models while needing fewer computational resources~\cite{lin2024sdxllightningprogressiveadversarialdiffusion}.
+
+While SDXL requires 32 or more steps for high-quality outputs, SDXL-Lightning achieves similar results with fewer steps, thanks to progressive distillation and adversarial training~\cite{lin2024sdxllightningprogressiveadversarialdiffusion}. This makes it particularly suitable for low-latency workflows like ours, where rapid generation and editing are essential.
+
+\subsubsection{Key Advantages for Our Use Cases}
+\begin{description}
+\item[Fast Generation] Uses distillation to reduce inference steps (down to 1–8 steps) while retaining quality, enabling real-time performance~\cite{lin2024sdxllightningprogressiveadversarialdiffusion}.
+\item[Memory Efficiency] Processes data in a latent space through Variational Autoencoders (VAE), reducing GPU requirements~\cite{lin2024sdxllightningprogressiveadversarialdiffusion}.
+\end{description}
+
+\subsubsection{Role in Pipeline}
+\begin{itemize}
+\item Generates entirely new images based on user prompts.
+\item Provides high-resolution outputs with minimal delays.
+\item Forms the foundation for image creation tasks, including modifications and enhancements.
+\end{itemize}
+
+\subsection{Instruct-Pix2Pix (Image Editing)}
+Instruct-Pix2Pix is a diffusion-based image editing model designed to modify images based on textual instructions. It combines a large language model (GPT-3) with a text-to-image model (Stable Diffusion) to generate a dataset for training, enabling edits directly through natural language commands.~\cite{brooks2023instructpix2pixlearningfollowimage}
+
+We selected this model for its ability to handle natural, flexible commands without requiring masks, fine-tuning, or manual annotations. It achieves edits quickly by applying changes in a single forward pass, making it faster and more user-friendly than earlier approaches~\cite{brooks2023instructpix2pixlearningfollowimage}.
+
+The model’s conditional diffusion approach avoids the need for per-example inversion or fine-tuning, making it well-suited for interactive workflows. Its ability to follow written instructions intuitively reduces the complexity of manual editing tasks. ~\cite{brooks2023instructpix2pixlearningfollowimage}
+
+\subsubsection{Key Features for Our Use Case}
+\begin{itemize}
+\item \textbf{Instruction-Based Editing:} Supports diverse edits, including replacing objects, changing styles, and altering moods~\cite{brooks2023instructpix2pixlearningfollowimage}.
+\item \textbf{Zero-Shot Generalization:} Can edit real images based on arbitrary commands without additional training, offering broad flexibility~\cite{brooks2023instructpix2pixlearningfollowimage}.
+\item \textbf{Classifier-Free Guidance:} Balances adherence to instructions with visual consistency through adjustable guidance parameters~\cite{brooks2023instructpix2pixlearningfollowimage}.
+\end{itemize}
+
+\subsubsection{Role in Pipeline}
+\begin{itemize}
+\item Enhances or modifies images created by SDXL-Lightning based on descriptive commands.
+\item Supports iterative edits, allowing users to refine outputs step-by-step.
+\item Maintains visual coherence between the original and edited versions.
+\end{itemize}
+
+\subsection{Stable Video Diffusion (Video Generation)}
+Stable Video Diffusion is a diffusion-based model designed to generate smooth, high-quality videos from static images. It builds upon the principles of image diffusion models, extending them to handle spatial and temporal data for video creatio. The model generates videos by learning to denoise sequences of frames, ensuring temporal coherence and smooth transitions between frames.~\cite{ho2022videodiffusionmodels}
+
+\subsubsection{Role in Pipeline}
+\begin{itemize}
+\item Converts still images into short videos.
+\end{itemize}
+
+\section{Libraries and Frameworks}
+\subsubsection{Python}
+Python served as the foundation for development due to its extensive AI ecosystem and compatibility with machine learning frameworks.
+
+\subsubsection{Flask}
+Flask was used to create the backend API and handle client-server interactions. It provided a lightweight framework for routing commands, processing inputs, and serving outputs.
+
+\subsubsection{Diffusers}
+The Diffusers library, developed by HuggingFace, was essential for working with diffusion-based models like SDXL and Pix2Pix. It simplified:
+\begin{itemize}
+\item Model loading and deployment.
+\item Pipeline configuration for image and video generation.
+\end{itemize}
+
+\subsubsection{LangChain}
+LangChain helped manage AI-driven workflows, particularly for intent recognition using the Mistral model. It enabled:
+\begin{itemize}
+\item Task chaining across different models.
+\item Processing structured outputs for better decision-making.
+\end{itemize}
+
+\subsubsection{SocketIO}
+SocketIO was used for real-time communication between the client and server. It supported:
+\begin{itemize}
+\item Live transcription of speech inputs.
+\item Dynamic updates during image and video processing.
+\item Feedback mechanisms, ensuring the user remained informed about progress.
+\end{itemize}
+
+\subsubsection{Pydub}
+Pydub handled audio processing, enabling speech input management before passing data to the Whisper model.
+
+\subsubsection{MoviePy}
+MoviePy facilitated video processing, allowing integration with Stable Video Diffusion for converting image sequences into videos.

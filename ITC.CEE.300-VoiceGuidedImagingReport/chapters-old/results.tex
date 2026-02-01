@@ -1,0 +1,91 @@
+%!TEX root = ../main.tex
+%********************************
+\chapter{Results and Demonstration}
+\section{Outputs}
+\subsection{Speech-to-Text and Intent Recognition}
+The application successfully processes voice commands into text using Whisper and Faster-Whisper. The transcription maintains high accuracy for both Finnish and English inputs, demonstrating multilingual support. Intent recognition using Mistral Instruct accurately interprets commands such as:
+\begin{itemize}
+    \item \textbf{“Create an image of a sunset.”} → Generates a new image using SDXL-Lightning.
+    \item \textbf{“Edit the image to add a mountain.”} → Modifies the existing image with Instruct-Pix2Pix.
+    \item \textbf{“Animate this image into a video.”} → Generates a video sequence using Stable Video Diffusion.
+\end{itemize}
+
+\subsubsection{Screenshots}
+\begin{itemize}
+    \item Show step-by-step outputs (speech-to-text, intent recognition logs, and structured JSON commands).
+    \item Highlight intermediate previews for edits and final outputs for videos.
+\end{itemize}
+
+\subsection{Generated Images}
+\begin{itemize}
+    \item Examples of high-resolution images created with SDXL-Lightning, demonstrating:
+    \begin{itemize}
+        \item Sharpness and quality even with short prompts.
+        \item Ability to handle complex scenes with multiple objects or stylistic variations.
+    \end{itemize}
+    \item Visuals illustrating edits made using Instruct-Pix2Pix, such as:
+    \begin{itemize}
+        \item Adding elements (e.g., “add a tree”).
+        \item Changing colors or moods (e.g., “make the image look like a sunset”).
+    \end{itemize}
+\end{itemize}
+
+\subsection{Video Outputs}
+\begin{itemize}
+    \item Short video clips created with Stable Video Diffusion, showing smooth animations and transitions from static inputs.
+\end{itemize}
+
+\subsection{Demonstration Use Cases}
+\begin{itemize}
+    \item \textbf{Scenario 1:} Generating and editing a landscape image, followed by creating an animated version.
+    \item \textbf{Scenario 2:} Creating a poster design, modifying text and colors, and adding animation effects.
+\end{itemize}
+
+\section{Performance Observations}
+\subsection{Latency Measurements}
+\begin{itemize}
+    \item \textbf{Speech-to-Text:}
+    \begin{itemize}
+        \item \textbf{Whisper (Faster-Whisper):} Achieves transcription times averaging ~1-2 seconds for short audio inputs (~5-10 seconds long).
+        \item Longer inputs (~30 seconds) complete in ~6-8 seconds with acceptable accuracy.
+    \end{itemize}
+    \item \textbf{Intent Recognition:}
+    \begin{itemize}
+        \item \textbf{Mistral Instruct (Q4 Quantization)} processes commands in ~200–300 milliseconds, balancing speed and resource usage.
+    \end{itemize}
+    \item \textbf{Image Generation:}
+    \begin{itemize}
+        \item \textbf{SDXL-Lightning} generates 1024x1024 images in ~1.5–3 seconds, depending on prompt complexity.
+        \item Edits using \textbf{Instruct-Pix2Pix} complete in ~2-4 seconds, including rendering updates.
+    \end{itemize}
+    \item \textbf{Video Generation:}
+    \begin{itemize}
+        \item \textbf{Stable Video Diffusion} produces 2–4 second videos in approximately 10–15 seconds, depending on the frame count and resolution.
+    \end{itemize}
+\end{itemize}
+
+\subsection{GPU Usage and Resource Observations}
+\begin{itemize}
+    \item \textbf{Memory Consumption:}
+    \begin{itemize}
+        \item Whisper and Mistral (quantized) comfortably fit within 8–12 GB VRAM, even on mid-range GPUs.
+        \item SDXL-Lightning and Stable Video Diffusion require 16–24 GB VRAM for optimal performance.
+        \item Dynamic model unloading successfully reduces memory pressure, allowing models to run sequentially on systems with limited VRAM.
+    \end{itemize}
+    \item \textbf{Resource Bottlenecks:}
+    \begin{itemize}
+        \item \textbf{Multiple Users:} Concurrent requests cause latency to increase significantly due to model reloading delays and GPU memory constraints.
+        \item \textbf{Batch Processing:} Larger batches (e.g., generating multiple outputs at once) slow down performance and may cause out-of-memory errors without careful optimization.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Observations on Accuracy and Quality}
+\begin{itemize}
+    \item \textbf{Speech Recognition:} Whisper maintains high transcription accuracy, especially for shorter inputs. However, background noise or overlapping speech can slightly reduce quality, suggesting room for noise filtering improvements in future updates.
+    \item \textbf{Image Outputs:}
+    \begin{itemize}
+        \item \textbf{SDXL-Lightning} produces sharp and detailed images, particularly for abstract or artistic styles.
+        \item Realistic outputs may require prompt tuning to balance detail and coherence.
+    \end{itemize}
+    \item \textbf{Video Outputs:} Stable Video Diffusion generates smooth transitions, but longer animations may lose coherence without additional conditioning inputs.
+\end{itemize}

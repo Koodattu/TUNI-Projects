@@ -1,0 +1,75 @@
+\chapter{System Architecture, Implementation and Optimizations}
+This chapter provides an in-depth overview of the system's architecture, detailing the implementation of core functionalities and the optimization techniques employed. It explains how the application processes voice commands and executes multimedia generation tasks, while addressing challenges related to responsiveness, resource management, and efficiency.
+
+\section{High-Level Architecture}
+The high-level architecture of the system, depicted in figure \ref{fig:hla} below, provides an overview of the sequential flow from voice input to action execution. The architecture is further explained step-by-step after the figure.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{images/high-level-arch.png}
+\caption[Short Caption]{High-level application architecture.}
+\label{fig:hla}
+\end{figure}
+
+\begin{enumerate}
+    \item \textbf{Voice Input:} Users provide voice commands through their microphone using a web interface. The audio is streamed directly to the server using socket-based communication.
+    \item \textbf{Transcription:} Whisper processes the audio data in real time, converting the speech into text, which is then streamed back to the client.
+    \item \textbf{Translation (Optional):} Whisper also provides a full audio translation into English when the user speaks in another language.
+    \item \textbf{Intention Recognition:} The transcribed (and translated) text is passed to Mistral language model to interpret the user's intent.
+    \item \textbf{Inferred Action Execution:} Based on the inferred action, the appropriate action is invoked:
+    \begin{itemize}
+        \item \textbf{Create Image:} SDXL-Lightning generates a new image from the prompt.
+        \item \textbf{Edit Image:} Instruct-Pix2Pix modifies an existing image based on the user's instructions.
+        \item \textbf{Generate Video:} Stable Video Diffusion creates a short video from a static image.
+        \item \textbf{Revert Action:} The most recent action is reverted, and we return to the previous image.
+    \end{itemize}
+    \item \textbf{Output Delivery:} Intermediate stages of image generation, along with the final images or videos, are streamed to the client interface in real-time.
+\end{enumerate}
+
+\section{Implementation Details}
+This section describes the key components of the application, including the Python backend, the web-based frontend, and their respective roles in handling tasks like voice input, transcription, intent recognition, and multimedia generation. It highlights how responsiveness, multilingual support, and intent recognition are achieved, ensuring the system meets user expectations.
+
+\subsection{Application Modules}
+The system consist of two primary modules:
+\begin{itemize}
+    \item \textbf{Python Backend:} This module handles API endpoints, manages AI models, and processes incoming data.
+    \item \textbf{Web-based Frontend:} The user interface is built using HTML, CSS, and JavaScript. It captures voice input, displays transcriptions and translations, and showcases the generated images or videos.
+\end{itemize}
+
+\subsection{Responsiveness and Feedback}  
+Tasks such as transcription, translation, image generation, and especially video generation can take considerable time, even on powerful hardware. To ensure the application remains responsive, the following methods were used: 
+\begin{itemize}  
+    \item \textbf{Real-Time Streaming with SocketIO:} Audio data is streamed to the server in small chunks using SocketIO. Partial transcription results are displayed immediately, followed by cleaned-up translations. Image and video generation progress is shown step-by-step, providing visual feedback during longer processing tasks.  
+    \item \textbf{Progress Indicators and Status Updates:} The interface includes indicators such as a spinner and status messages to inform users of the application's current state and keep them aware of ongoing processes.  
+\end{itemize}  
+
+\subsection{Multilingual Support}  
+We wanted the application to understand voice commands in multiple languages, including Finnish and English. However, most small open-source language models primarily support English or other widely spoken languages, making it challenging to handle less common languages like Finnish. Fortunately, Whisper supports both transcription and translation from many languages into English. This allows the system to process any language supported by Whisper by translating non-English inputs into English before further processing.  
+
+\subsection{Command Parsing and Intent Recognition}  
+We use the \textbf{instruct-tuned} variant of Mistral 7B, which is fine-tuned to follow natural language instructions. Instruction-tuned models generalize better across tasks and improve alignment with user intent, making them ideal for structured outputs and tasks requiring precise interpretation \cite{ouyang2022instruct}. These features make Mistral 7B Instruct a strong fit for our application, where accurate parsing of commands is essential \cite{ouyang2022instruct}.
+
+To improve intention recognition and to guide Mistral Instruct in parsing user commands into structured JSON actions, a \textbf{few-shot prompting} approach was employed. By providing a few examples of desired outputs, we help the model generalize patterns and produce accurate commands based on user input, as shown in prior work on in-context learning \cite{brown2020fewshot}.
+
+This combination of an instruct-tuned model and few-shot prompting enables the system to infer user intent effectively and convert natural language commands into structured JSON instructions. These instructions are then used to execute specific actions, such as creating new images, editing existing ones, generating videos, or reverting to previous states, enabling precise execution of user commands.
+
+\subsection{Video Generation}  
+Generating videos is a time-consuming process, especially when creating high-resolution outputs. To enhance the visual appeal and provide a better experience after the long wait, \textbf{MoviePy} was used to create longer looping videos. This is achieved by duplicating the generated video, reversing its playback, and combining it with the original. This simple technique produces smooth loops, making the end result more visually pleasing.  
+
+\section{Optimization Techniques}
+This section focuses on the strategies used to optimize the application’s performance. It discusses improvements in transcription and translation using Faster-Whisper, memory efficiency enhancements through quantization and CPU offloading, and dynamic model loading to handle the constraints of running multiple models on consumer-grade hardware.
+
+\subsection{Optimizing Speech Transcription and Translation}
+Transcribing and translating speech, particularly in Finnish, posed challenges with smaller Whisper models, which struggled with non-English languages. Larger models performed significantly better but required substantial memory and were relatively slow, especially with longer voice commands. To address this, we used \textbf{Faster-Whisper}, which delivers up to four times faster transcription speeds and lower memory usage while maintaining high accuracy \cite{fasterwhisper}. This enabled the deployment of a larger Whisper model, improving transcription and translation quality for Finnish and other languages while keeping memory usage manageable.
+
+\subsection{Optimizing Language Model Performance}
+Large language models (LLMs) often use quantization to reduce memory usage and improve processing speed, enabling more tokens per second with only a minor reduction in accuracy. For this application, \textbf{Mistral} was deployed with \textbf{4-bit quantization}. This approach significantly lowers the model's memory footprint while maintaining high performance, allowing efficient operation on available hardware. Studies have shown that 4-bit precision strikes a practical balance between memory efficiency and output accuracy across different model sizes and architectures \cite{dettmers20234bit}.
+
+\subsection{Memory Optimization for Diffusion Models}
+Diffusion models require significant amount of memory, which can be challenging for consumer GPUs. To address this, we used optimization techniques from the HuggingFace \textbf{Diffusers} library, including \textbf{CPU offloading} and \textbf{VAE slicing}. CPU offloading reduces GPU memory usage by temporarily moving inactive components to the CPU, while VAE slicing processes data in smaller parts to handle larger batches efficiently. These techniques allowed us to run high-quality diffusion models with lower memory requirements and minimal performance impact.  
+
+\subsection{Managing Multi-Model Resource Constraints}  
+Running multiple AI models at the same time demands significant computational resources, particularly when hosting them locally on a single machine. To manage these constraints, we implemented dynamic model loading and unloading based on inferred user actions. Core models, such as \textbf{Whisper} and \textbf{Mistral}, remain always loaded in GPU memory to ensure fast response times for frequently used tasks like transcription, translation, and intent recognition. Memory-intensive diffusion models are loaded only when needed and unloaded once processing is complete. Combined with the previously discussed optimizations, this approach enables the deployment of multiple AI models on consumer-grade hardware with minimal performance loss.  
+
+
+

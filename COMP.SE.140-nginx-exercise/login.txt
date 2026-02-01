@@ -1,0 +1,3 @@
+username = ex4user
+
+password = ex4pass

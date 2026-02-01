@@ -1,0 +1,53 @@
+% Author and date related stuff
+\newcommand{\reportTitle}{Tekoäly pk-yritysten voimavarana Etelä-Pohjanmaalla}
+\newcommand{\reportSubtitle}{Nykytila, mahdollisuudet ja käytännön suositukset generatiivisen tekoälyn hyödyntämiseen}
+\newcommand{\shortAuthors}{% A short version of author names which will appear on the 1st page
+Juha Ala-Rantala, Jussi Rasku, Tuire Hautala-Kankaanpää
+%Additional authors would be FirstName LastName, separated by comma
+}\newcommand{\reportAuthors}{
+Juha Ala-Rantala\authorFootnote{juha.ala-rantala@tuni.fi},
+Jussi Rasku\authorFootnote{jussi.rasku@tuni.fi},
+Tuire Hautala-Kankaanpää\authorFootnote{tuire.hautalakankaanpaa@uwasa.fi},
+%FirstName LastName NoOrcid\authorFootnote{firstname.lastname@tuni.fi},
+}
+\newcommand{\reportAffiliation}{Tampere University, Faculty of Information Technology and Communication Sciences, Seinäjoki, Finland}
+\newcommand{\reportDate}{August 19, 2025}
+
+% ISBN and stuff (not always required)
+% \newcommand{\publicationURN}{https://urn.fi/URN:ISBN:\ISBNonline}
+% \newcommand{\ISBNprint}{000-000-00-0000-0}
+% \newcommand{\ISBNonline}{000-000-00-0000-0}
+
+
+%*******************************************************
+% Other packages and control sequences that you might need
+%*******************************************************
+
+% These are for ORCID related stuff
+\newcommand*{\authorFootnote}[1]{\footnote{email: \url{#1}}}
+%\newcommand*{\authorFootnoteOrcid}[2]{\footnote{email: \url{#1}; ORCID iD: %\href{https://orcid.org/#2}{[#2]}}}
+%\usepackage{xspace}
+%\newcommand*{\orcidID}[1]{\href{https://orcid.org/#1}{[#1]\xspace}}
+
+%% BibLaTeX: This is "Option A" of setting up BibLaTeX in one way
+\usepackage[
+    backend=biber,bibencoding=utf8, %instead of bibtex
+    language=auto,%
+    style=numeric,%
+    %style=authoryear-comp, % Author 1999, 2010
+    uniquename=init,% modifies the printing of cited entries
+    uniquelist=false,% modifies the printing of cited entries
+    maxnames=2,% modifies the printing of cited entries
+    minnames=1,% modifies the printing of cited entries
+    bibstyle=ieee,%
+    %bibstyle=authoryear,dashed=false, % dashed: substitute rep. author with ---
+    %sorting=nyt, % name, year, title
+    maxbibnames=10, % default: 3, et al.
+    %backref=true,%
+    natbib=true]{biblatex}
+%
+%% BibLaTeX: This is "Option A" of adding bib resources to the project by using BibLatex package
+\addbibresource{bibliography/example.bib}
+
+%% NatBib is another common package that may be used instead of BibLaTeX
+%\usepackage{natbib}

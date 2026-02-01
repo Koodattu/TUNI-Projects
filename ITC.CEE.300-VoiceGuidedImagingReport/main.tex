@@ -1,0 +1,62 @@
+\newcommand{\templateVersion}{v0.9.5}
+
+%\documentclass[a4paper,twoside,11pt]{report}
+\documentclass[a4paper,11pt]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\usepackage{csquotes}
+\usepackage{array}
+\usepackage{xcolor}
+%\usepackage[british]{babel}
+\usepackage{float}
+\usepackage[skip=4pt]{caption}
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\input{your/configuration}
+%\hyphenpenalty=900
+
+%*******************************************************
+% END PREAMBLE
+%*******************************************************
+%*******************************************************
+% Begin Main Matter
+%*******************************************************
+\begin{document}
+\renewcommand*{\bibname}{References} % has to be declared here after preamble
+
+%*******************************************************
+% Frontmatter
+%*******************************************************
+
+\input{frontsetup}
+
+
+%*******************************************************
+% Mainmatter
+%*******************************************************
+\input{your/tex_files}% setup your included files here
+
+
+% ******************************************************
+% Backmatter
+%*******************************************************
+
+%%% Bibliography section
+\cleardoublepage % Ensures that References start on a new page
+\printbibliography\addcontentsline{toc}{chapter}{References}
+\clearpage\thispagestyle{empty}%this should make the following verso (i.e., left) page empty of page numbers etc.
+
+%%% Appendix, if needed
+%\cleardoublepage
+%\input{frontbackmatter/appendix}
+%\clearpage\thispagestyle{empty}%this should make the following verso (i.e., left) page empty of page numbers etc.
+
+%%% Back cover pages, if needed
+%\cleardoublepage\pagenumbering{Alph}\setcounter{page}{3}
+%\input{frontbackmatter/backpage}% back page is on verso page (left)
+
+\end{document}

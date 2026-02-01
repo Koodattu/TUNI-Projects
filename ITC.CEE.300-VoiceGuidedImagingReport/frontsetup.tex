@@ -1,0 +1,26 @@
+% This is overall setup file that controls the page numbering and format of title page and main matter (article).
+% Typically it is not needed to modify anything here
+
+%%% The title pages
+\pagenumbering{Alph} % set different pagenumbering scheme for front pages
+% Including the front page of the BOOK
+\input{frontbackmatter/titlepage}
+\pagenumbering{roman}\setcounter{page}{1} % set roman pagenumbering for other front matter
+\cleardoublepage\input{frontbackmatter/inner_titlepage}
+
+%%% table of contents
+\cleardoublepage\tableofcontents
+\clearpage\thispagestyle{empty}%this should make the following verso (i.e., left) page empty of page numbers etc.
+
+%%% Abstract section
+\cleardoublepage\chapter*{Abstract}\addcontentsline{toc}{chapter}{Abstract} % Adds unnumbered chapter to TOC
+\input{chapters/0abstract}
+\clearpage
+\input{chapters/0ai}
+\clearpage\thispagestyle{empty}%this should make the following verso (i.e., left) page empty of page numbers etc.
+
+%*******************************************************
+% Mainmatter
+%*******************************************************
+\cleardoublepage
+\pagenumbering{arabic}\setcounter{page}{1} % set arabic numbers for main content

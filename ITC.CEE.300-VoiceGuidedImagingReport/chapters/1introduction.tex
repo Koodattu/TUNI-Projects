@@ -1,0 +1,44 @@
+\chapter{Introduction}
+This chapter provides an overview of the project, including its background, motivation, and objectives. It discusses the increasing relevance of voice-driven interactions in human-computer interfaces and the potential of locally hosted generative AI systems. The chapter also defines the project and report scope, outlining the primary functionalities of the developed application and the structure of the report.
+\section{Background and Motivation}
+This project is part of the \href{https://www.tuni.fi/fi/tutkimus/gpt-lab-seinajoki}{\textcolor{blue}{\underline{GPT Lab Seinäjoki}}} and the broader \href{https://gpt-lab.eu/}{\textcolor{blue}{\underline{GPT Lab}}} AI research initiatives, which focus on developing practical AI-powered applications. Recent advancements in open-source generative AI models have enabled complex tasks across text, image, and speech processing. Hosting these models locally offers valuable insights into their performance, integration challenges, and optimization needs.
+
+The motivation for this work arises from the increasing shift toward voice-driven interactions in human-computer interfaces, a trend that is expected to grow in importance for organizations. Intent recognition is central to enabling systems to perform specific actions based on user input, making it a key area of exploration. Additionally, hosting models locally addresses privacy concerns by ensuring that user data remains on the device, avoiding reliance on external cloud services.
+
+This project integrates multiple generative AI models into a unified system, utilizing Whisper for speech transcription and translation, a large language model via Ollama for intent recognition, and diffusion-based models from HuggingFace for image and video generation. These components enable interactions through natural language voice commands.
+
+The primary aim is to evaluate the integration and performance of AI models in real-time applications. By combining transcription, intent recognition, and multimedia generation, the project explores strategies to optimize AI deployment, responsiveness, and resource management. This proof-of-concept demonstrates the potential of locally hosted AI systems while identifying areas for future improvement and scalability.
+
+\section{Objectives}
+This section outlines the main goals of the project. The primary objective focuses on creating a functional locally hosted AI-powered application. Secondary objectives highlight optimization strategies.
+
+\subsection{Primary Objective}
+The primary objective of this project is to develop a functional AI-powered application by integrating multiple generative AI models locally. The system combines speech recognition, intent recognition, and image and video generation to create a cohesive, voice-guided multimedia tool. This serves as a proof-of-concept for deploying and evaluating multi-model AI systems in local environments.
+
+\subsection{Secondary Objectives}
+The secondary objectives focus on optimizing the system for efficient operation and future scalability. This includes analyzing memory usage and implementing techniques to run multiple AI models concurrently on consumer-grade hardware, evaluating key performance metrics such as latency and responsiveness, and establishing a foundation for comparing self-hosted and cloud-hosted AI systems in terms of performance, scalability, and cost.
+
+\section{Scope}
+This section defines the boundaries of the project and the report. The project scope emphasizes the integration of generative AI models to enable voice-guided functionalities. The report scope focuses on documenting the practical development process while omitting detailed theoretical discussions.
+
+\subsection{Project Scope}
+This project serves as a proof-of-concept for integrating multiple generative AI models into a voice-guided imaging application. The high-level application concept is shown in the figure \ref{fig:hlc} below. The application focuses on implementing the following key functionalities:
+\begin{itemize}
+    \item \textbf{Voice Command Processing:} Capture, transcribe, and optionally translate user voice inputs into text for processing.  
+    \item \textbf{Intent Recognition:} Analyze transcriptions to infer user intentions and execute actions such as creating, editing, reverting images, or generating videos.  
+    \item \textbf{Generative Features:} Generate new images, modify existing ones based on user commands, and create short video loops from static images.  
+\end{itemize}
+
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{images/high-level-concept.png}
+\caption[Short Caption]{High-level application concept.}
+\label{fig:hlc}
+\end{figure}
+
+\subsection{Report Scope}
+This report documents the practical development of the application, focusing on what was built, how it was constructed, the models utilized, and the results achieved. It highlights the hands-on implementation and key findings while avoiding an in-depth discussion of theoretical backgrounds. 
+
+\section{Report Structure}
+This report begins with an introduction in Chapter 1, outlining the background, motivation, objectives, and scope of the project. Chapter 2 details the technologies and tools used, including generative AI models, software frameworks, and hardware configurations. Chapter 3 explains the system architecture, implementation, and optimization techniques applied to ensure efficient performance. Chapter 4 presents the results, including performance metrics, demonstration scenarios, and key considerations such as user command ambiguity and system limitations. Finally, Chapter 5 summarizes the accomplishments, discusses outcomes, proposes future work, and highlights key takeaways from the project. References provide additional context and technical details.

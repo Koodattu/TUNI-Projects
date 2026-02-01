@@ -1,0 +1,12 @@
+PS C:\Users\Juha> docker container ls
+CONTAINER ID   IMAGE                                        COMMAND                  CREATED              STATUS              PORTS                    NAMES
+c0a02bce3aa6   compse140-docker-compose-exercise-service1   "python app.py"          About a minute ago   Up About a minute   0.0.0.0:8199->8199/tcp   compse140-docker-compose-exercise-service1-1
+6954f7779fdf   compse140-docker-compose-exercise-service2   "docker-entrypoint.s…"   About a minute ago   Up About a minute   5000/tcp                 compse140-docker-compose-exercise-service2-1
+
+PS C:\Users\Juha> docker network ls
+NETWORK ID     NAME                                        DRIVER    SCOPE
+c709d2a22615   bridge                                      bridge    local
+5b4aca19453d   compse140-docker-compose-exercise_default   bridge    local
+3cb270e8cf41   ex03_default                                bridge    local
+1d9f592fec71   host                                        host      local
+8246c921de63   none                                        null      local

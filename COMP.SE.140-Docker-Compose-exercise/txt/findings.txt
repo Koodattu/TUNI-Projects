@@ -1,0 +1,16 @@
+In this exercise, I learned how Docker containers share certain resources with the host while keeping most things isolated. 
+Here are the key points:
+
+- Kernel: Containers share the host’s kernel. 
+Commands like ps and df work because they use the host’s kernel to get information, but containers can only see their own processes.
+
+- Filesystem: Each container has its own isolated filesystem, but it still shares the host’s disk. 
+For example, when I ran df -h, it showed the available disk space from the host's root directory. 
+Containers can also access the host filesystem if volumes are mounted.
+
+- Network: Containers are isolated on a virtual network but can communicate with each other if they are on the same network, as in my setup where Service1 could communicate with Service2. Only Service1 was accessible from outside because it had an exposed port.
+
+- Processes: Containers can only see their own processes, not the processes running on the host or in other containers, which enhances isolation.
+
+In summary, containers provide isolation but still share essential resources with the host, like the kernel and network interfaces. 
+This allows them to function as lightweight, portable environments while maintaining some necessary interaction with the host system.

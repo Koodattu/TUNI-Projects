@@ -1,0 +1,18 @@
+For this assignment, I used ChatGPT as an AI tool to assist me with understanding Docker and Docker Compose, 
+and to write parts of the Python and Node.js applications.
+
+The AI helped me understand how to structure Dockerfiles, 
+especially when I encountered errors with missing Linux utilities like ps and uptime. 
+It guided me on how to install those utilities inside the containers. 
+I also had trouble with formatting the JSON output, 
+and the AI showed me how to break down the output of system commands like ps -ax and df -h into a more readable format.
+
+Another big area where the AI was useful was in structuring the docker-compose.yaml file and linking the two services. 
+I had some confusion about how containers communicate over Docker networks, 
+but the AI provided explanations and examples, which made it easier to implement.
+
+However, there were some things the AI couldn’t help with directly. 
+For example, I still had to test and debug the code in my own environment. 
+Sometimes, the AI gave overly complex solutions when simpler ones worked fine. 
+Overall, using ChatGPT helped me save time and understand Docker better, 
+but I had to combine it with testing and research to get everything working smoothly.

@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - backend
+  backend:
+    build: ./backend
+    ports:
+      - "5500:5000"
+    volumes:
+      - ./backend/data:/app/data
+    restart: unless-stopped
+
+volumes:
+  scorekeeper-db:

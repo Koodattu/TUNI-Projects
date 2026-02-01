@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Service Interface</title>
+</head>
+<body>
+    <button id="request-btn">REQUEST</button>
+    <button id="stop-btn">STOP</button>
+    <br><br>
+    <textarea id="response-area" rows="80" cols="80"></textarea>
+
+    <script>
+        document.getElementById('request-btn').addEventListener('click', function() {
+            fetch('/request')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('response-area').value = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+    document.getElementById('stop-btn').addEventListener('click', function() {
+        // Send the shutdown request
+        fetch('/stop', { method: 'GET' });
+        // Immediately display the alert
+        alert('System is shutting down.');
+    });
+    </script>
+</body>
+</html>

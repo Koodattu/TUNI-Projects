@@ -1,0 +1,68 @@
+%!TEX root = ../main.tex
+%********************************
+\chapter{System Design and Implementation}
+\section{Overview of Application Architecture}
+The Voice-Guided Imaging application follows a modular pipeline architecture, designed to handle speech-to-command processing and execute tasks like image generation, editing, and video creation. This modular design enhances flexibility and scalability, allowing components to be updated or replaced without impacting the entire system.
+\subsection{Pipeline Overview}
+The application workflow consists of four main stages:
+\begin{enumerate}
+    \item Speech-to-Text
+    \begin{itemize}
+        \item OpenAI Whisper processes spoken commands, converting them into text inputs for downstream processing.
+    \end{itemize}
+    \item Intent Recognition
+    \begin{itemize}
+        \item Mistral Instruct interprets text inputs to infer user intent, generating structured outputs in JSON format.
+    \end{itemize}
+    \item Action Execution
+    \begin{itemize}
+        \item Based on the intent, the system triggers specific models:
+        \begin{itemize}
+            \item SDXL-Lightning generates new images.
+            \item Instruct-Pix2Pix edits existing images.
+            \item Stable Video Diffusion produces videos from static inputs.
+        \end{itemize}
+    \end{itemize}
+    \item Feedback
+    \begin{itemize}
+        \item The system provides real-time updates and output previews via SocketIO, enabling interactive workflows.
+    \end{itemize}
+\end{enumerate}
+
+\section{Model Management and Optimization}
+The application was designed to run entirely on local hardware, leveraging GPU acceleration to host multiple generative AI models. Managing memory usage and optimizing performance were critical to ensuring smooth operation.
+
+    
+\subsubsection{Dynamic Model Loading and Unloading}
+\begin{itemize}
+\item Models are loaded on demand and unloaded after execution to free GPU memory, enabling multiple models to be run sequentially without exceeding hardware limits.
+\item For example, Whisper transcribes speech first, then unloads to make room for the Mistral model, which processes intent recognition before passing control to image or video generation models.
+\end{itemize}
+
+
+\subsubsection{VAE Slicing for Performance}
+\begin{itemize}
+\item The SDXL-Lightning model utilizes VAE slicing to split computations into smaller chunks, reducing memory overhead and speeding up processing without compromising output quality.
+\end{itemize}
+
+\subsubsection{Quantization for Efficiency}
+\begin{itemize}
+\item Models like Mistral Instruct were loaded in 4-bit (Q4) precision, reducing memory requirements and allowing deployment on systems with limited GPU resources.
+\end{itemize}
+
+\section{Real-Time Communication}
+The application uses SocketIO to enable real-time interaction between the server and the user interface. This approach ensures smooth handling of live inputs and feedback updates, which are critical for an interactive, voice-controlled tool.
+
+\subsubsection{Key Features}
+\begin{itemize}
+    \item \textbf{Live Transcription Updates:} Users can see intermediate results while commands are being processed, providing a more responsive experience.
+    \item \textbf{Asynchronous Task Handling:} The system manages parallel tasks like transcription and image rendering, minimizing delays by queuing commands and outputs in the background.
+    \item \textbf{Streaming Feedback:} Output previews (e.g., images or videos) are streamed back to the user in real-time, reducing the need for manual refreshes.
+\end{itemize}
+
+\section{Scalability Challenges}
+\begin{itemize}
+    \item \textbf{Multiple Users:} Running multiple generative AI models locally limits scalability, as GPUs can quickly become bottlenecked with concurrent requests. While the system supports single-user workflows effectively, performance may degrade with multiple simultaneous users.
+    \item \textbf{Hardware Requirements:} The application was tested on high-end GPUs (e.g., NVIDIA RTX 4090), which are required for handling larger models. Scaling down to consumer-grade hardware may involve further optimizations or trade-offs in model size and quality.
+    \item \textbf{Future Considerations:} Addressing scalability for multiple users may require distributed architectures or hybrid approaches using cloud APIs for overflow processing.
+\end{itemize}

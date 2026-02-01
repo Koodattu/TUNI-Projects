@@ -1,0 +1,47 @@
+\chapter{Technologies and Tools}
+This chapter outlines the core technologies and tools utilized in the project. It describes the generative AI models, software frameworks, and hardware setup that enabled the development and deployment of the voice-guided multimedia application.
+
+\section{Generative Artificial Intelligence Models}
+This section discusses the AI models used in the project, including speech-to-text transcription and translation, intent recognition, and diffusion-based models for image and video generation. Each model’s capabilities and role in the system are briefly introduced.
+
+\subsection{Speech-To-Text and Translation: OpenAI Whisper}
+\textbf{Whisper} is a state-of-the-art speech recognition model developed by OpenAI. It supports multiple languages and demonstrates strong performance in transcribing speech, even in noisy environments and with diverse accents \cite{radford2022whisper}. Trained on a vast multilingual dataset, Whisper generalizes well to various tasks, including translation and language identification, without requiring fine-tuning \cite{radford2022whisper}. Its robust zero-shot capabilities make it suitable for real-world applications \cite{radford2022whisper}.
+
+\subsection{Intention Recognition: Mistral 7B Language Model}
+\textbf{Mistral 7B} is a 7-billion-parameter language model designed for efficiency and strong performance. It delivers results comparable to larger models while using less memory and computational resources, making it well-suited for real-time applications \cite{jiang2023mistral7b}. Benchmarks show it outperforms larger models in reasoning, comprehension, and coding tasks, offering a balance between capability and resource efficiency \cite{jiang2023mistral7b}. Mistral has also improved fine-tuned versions readily available.
+
+\subsection{Image and Video Generation: Diffusion-Based Models}
+\textbf{SDXL-Lightning} is a fast and efficient text-to-image generation model based on the SDXL framework. It produces high-resolution, detailed images with fewer inference steps than traditional diffusion models, enabling rapid image creation from simple text prompts \cite{lin2024sdxllightning}. Its ability to deliver quality results quickly makes it well-suited for real-time applications requiring diverse and visually rich outputs \cite{lin2024sdxllightning}.
+\\
+\\
+\textbf{InstructPix2Pix} is a model designed for intuitive, natural language-based image editing. It allows users to modify images by providing textual instructions, enabling tasks such as adding or removing objects, altering styles, and adjusting visual attributes \cite{brooks2023pix2pix}. Unlike prior methods, it performs edits in a single forward pass without requiring masks or fine-tuning, enabling fast and flexible edits \cite{brooks2023pix2pix}.
+\\
+\\
+\textbf{Stable Video Diffusion} builds on diffusion-based models to enable high-quality video generation. It generates temporally coherent and visually consistent video sequences by extending static image generation techniques to video, ensuring smooth transitions between frames \cite{ho2022video}.
+
+\section{Software, Libraries and Frameworks}
+This section presents the key software tools and libraries that supported the implementation, such as Python for programming, Flask for the web interface, SocketIO for real-time communication, and the HuggingFace Diffusers library for managing diffusion-based models.
+
+\subsection{Ollama}
+\textbf{Ollama} is a multi-platform application designed for running large language models (LLMs) locally through a command-line interface \cite{ollama}. It simplifies the deployment and management of models by providing a library of pre-configured models that can be downloaded and executed with minimal setup. In this project, Ollama was used to run the Mistral Instruct model, offering a convenient and efficient way to host the model locally while managing resources and performance automatically.
+
+\subsection{Python}
+\textbf{Python} is the primary programming language used for this project due to its simplicity, rapid prototyping capabilities, and extensive libraries for AI and machine learning. Its popularity in AI development is highlighted by the 2024 GitHub Octoverse report, which ranks Python as the most used programming language on the platform \cite{octoverse2024}.
+
+\subsection{Flask}
+\textbf{Flask} is a lightweight Python web application framework designed for simplicity and scalability \cite{palletsflask}. Flask was chosen to implement and host the user interface as a website, handle the application state and API endpoints to receive audio input, process user commands, and deliver generated images and videos.
+
+\subsection{SocketIO}
+\textbf{SocketIO} provides real-time, bi-directional communication between clients and servers \cite{socketio}. In this project, it handles streaming audio data from the web interface to the server in small chunks and delivers partial transcriptions back to the client. This ensures a responsive and interactive user experience. The frontend utilizes the \texttt{socket.io.js} JavaScript library, while the backend relies on the \texttt{Flask-SocketIO} Python library.
+
+\subsection{Diffusers}
+\textbf{Diffusers} is a library by HuggingFace for integrating state-of-the-art pretrained diffusion models to generate images, audio, and videos \cite{diffusers}. It is used to implement and manage pipelines for SDXL-Lightning, Instruct-Pix2Pix, and Stable Video Diffusion. The library simplifies loading model weights, configuring pipelines, and scheduling inference steps, enabling seamless integration of these models into the application.
+
+\section{Hardware and Hosting}
+This section describes the hardware requirements and local hosting setup for the project, focusing on GPU specifications and the installation process for managing the AI models and dependencies.
+
+\subsection{GPU Requirements}
+The application was developed and tested on an NVIDIA RTX 4090 GPU with 24GB of VRAM. This high-end GPU provides the necessary computational power and memory to handle multiple large models simultaneously. For stable performance, a GPU with at least 12–16GB of VRAM is recommended. Lower VRAM GPUs will struggle with running multiple large models concurrently, requiring resorting to smaller models.
+
+\subsection{Local Hosting Setup}
+The local hosting setup requires installing Ollama to manage and run the Mistral Instruct language model and installing the required Python libraries. Faster-Whisper may require different platform-specific setup steps. The application downloads any missing diffusion models from HuggingFace during the first run, which takes time depending on download speeds.
